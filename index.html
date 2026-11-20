@@ -6,6 +6,9 @@
 <meta name="theme-color" content="#16070d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Малина — поём хором</title>
+<meta name="description" content="Тексты песен для вечеринки «Малина — поём хором»">
+<meta property="og:title" content="Малина — поём хором!">
+<meta property="og:description" content="Открывай песню и пой вместе со всеми">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&family=Unbounded:wght@700&display=swap" rel="stylesheet">
 <style>
@@ -53,6 +56,17 @@
   .inv-sub{font-size:15px;color:#f4dbe4;text-shadow:0 1px 8px rgba(0,0,0,.6)}
   .inv-btn{display:inline-block;margin-top:14px;padding:10px 16px;border-radius:999px;background:#e8336d;color:#fff;text-decoration:none;font-weight:600;font-size:15px}
   .invite .qr{flex:0 0 auto;width:118px;height:118px;margin:0;padding:6px}
+  #up{position:fixed;right:16px;bottom:20px;width:48px;height:48px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:22px;box-shadow:0 4px 14px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .2s;z-index:6;cursor:pointer}
+  #up.show{opacity:1;pointer-events:auto}
+  .donate{margin:34px 0 8px;padding:20px 18px;border-radius:18px;text-align:left;background:var(--card);border:1px solid var(--line)}
+  .d-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .d-title{font-family:Unbounded,Manrope,sans-serif;font-size:19px;line-height:1.25}
+  .d-sub{color:var(--muted);margin-top:8px;font-size:15px}
+  .d-qr{flex:0 0 auto;width:118px;height:118px;background:#fff;border-radius:12px;padding:5px}
+  .d-btns{display:flex;gap:8px;margin-top:16px}
+  .d-btns button,.d-save{flex:1;padding:12px 8px;border-radius:12px;border:none;background:var(--accent);color:#fff;font:inherit;font-weight:600;font-size:14px;white-space:nowrap;text-decoration:none;text-align:center;cursor:pointer}
+  .d-save{background:transparent;border:1px solid var(--accent);color:var(--text)}
+  .d-hint{color:var(--muted);font-size:13px;margin-top:10px}
 </style>
 </head>
 <body>
@@ -60,11 +74,11 @@
   <header>
     <div class="brand">Малина · Crossroad, Дананг</div>
     <h1>Поём <span>хором!</span></h1>
-    <div class="sub">20 ноября · нажми на песню, чтобы открыть текст</div>
+    <div class="sub">Нажми на песню, чтобы открыть текст</div>
   </header>
 
   <div class="bar">
-    <input id="q" type="search" placeholder="Поиск песни или исполнителя…">
+    <input id="q" type="search" placeholder="Название, исполнитель или строчка…">
     <button id="all">Все</button>
     <button id="fold">Свернуть</button>
     <button id="minus">А−</button>
@@ -72,7 +86,22 @@
     <button id="theme">🌙 Экран</button>
   </div>
 
+  <template id="donateTpl"><section class="donate" id="donate">
+    <div class="d-row">
+      <div class="d-text">
+        <div class="d-title">Поддержать проект «Малина»</div>
+        <div class="d-sub">Любой донат важен для нас</div>
+      </div>
+      <img class="d-qr" src="data:image/png;base64,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" alt="QR для доната">
+    </div>
+    <div class="d-btns">
+      <button type="button" id="copyAcc">Скопировать номер</button>
+      <a class="d-save" href="data:image/png;base64,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" download="malina-donate-qr.png">Сохранить QR</a>
+    </div>
+    <div class="d-hint">Сохрани QR и открой его в приложении банка через «Сканировать QR».</div>
+  </section></template>
   <main id="list"></main>
+  <button id="up" aria-label="Наверх">↑</button>
   <div class="none" id="none">Песни не найдены</div>
 
 
@@ -107,7 +136,7 @@ const BLOCKS = [
     { artist: "Агата Кристи", title: "Как на войне" },
     { artist: "Звери", title: "Районы, кварталы" },
     { artist: "Жуки", title: "Батарейка" },
-    { artist: "Ленинград", title: "Лабутены" },
+    { artist: "Ленинград", title: "Экспонат", aka: ["Лабутены"] },
   ]},
   { title: "2-й блок", songs: [
     { artist: "Градусы", title: "Режиссёр" },
@@ -144,22 +173,24 @@ function render(text){
 const norm = s => s.toLowerCase().replace(/ё/g,'е').replace(/[^a-zа-я0-9]+/g,'');
 const list = document.getElementById('list');
 let n = 0;
-list.innerHTML = BLOCKS.map(b => `
+const DONATE = document.getElementById('donateTpl').innerHTML;
+list.innerHTML = BLOCKS.map((b, i) => (i === 1 ? DONATE : '') + `
   <section class="block"><h2>${b.title}</h2>
   ${b.songs.map(s => `
-    <details class="song" data-s="${(s.artist+' '+s.title).toLowerCase()}" data-k="${norm(s.title)}">
+    <details class="song" data-s="${(s.artist+' '+s.title+' '+(s.aka||[]).join(' ')).toLowerCase().replace(/ё/g,'е')}" data-k="${norm(s.title)}">
       <summary><div class="num">${++n}</div><div><div class="t">${s.title}</div>${s.artist?`<div class="a">${s.artist}</div>`:''}</div></summary>
       <div class="lyrics">${render('')}</div>
     </details>`).join('')}
   </section>`).join('');
 
 function parseSongs(txt){
-  const keys = new Set(BLOCKS.flatMap(b => b.songs.map(s => norm(s.title))));
+  const alias = {}; BLOCKS.forEach(b => b.songs.forEach(s => { alias[norm(s.title)] = norm(s.title); (s.aka||[]).forEach(a => alias[norm(a)] = norm(s.title)); }));
+  const keys = new Set(Object.keys(alias));
   const artists = {}; BLOCKS.forEach(b => b.songs.forEach(s => artists[norm(s.title)] = norm(s.artist)));
   const out = {}; let cur = null, prevBlank = true;
   for (const line of txt.replace(/\r/g,'').split('\n')){
     const k = norm(line), blank = !line.trim();
-    if (k && keys.has(k) && !(k in out) && prevBlank && line.trim().length < 60){ cur = k; out[cur] = []; prevBlank = false; continue; }
+    if (k && keys.has(k) && !(alias[k] in out) && prevBlank && line.trim().length < 60){ cur = alias[k]; out[cur] = []; prevBlank = false; continue; }
     prevBlank = blank;
     if (cur){ if (!out[cur].some(l => l.trim()) && artists[cur] && k === artists[cur]) continue; out[cur].push(line); }
   }
@@ -169,7 +200,7 @@ fetch('songs.txt').then(r => r.ok ? r.text() : '').then(txt => {
   const texts = parseSongs(txt);
   document.querySelectorAll('.song').forEach(el => {
     const t = texts[el.dataset.k];
-    if (t) el.querySelector('.lyrics').innerHTML = render(t.join('\n'));
+    if (t){ el.querySelector('.lyrics').innerHTML = render(t.join('\n')); el.dataset.s += ' ' + t.join(' ').toLowerCase().replace(/ё/g,'е'); }
   });
 }).catch(() => {});
 const store = { get(k){ try{return localStorage.getItem(k)}catch(e){return null} }, set(k,v){ try{localStorage.setItem(k,v)}catch(e){} } };
@@ -177,7 +208,7 @@ const $ = id => document.getElementById(id);
 const songs = [...document.querySelectorAll('.song')];
 
 $('q').addEventListener('input', e => {
-  const q = e.target.value.trim().toLowerCase(); let shown = 0;
+  const q = e.target.value.trim().toLowerCase().replace(/ё/g,'е'); let shown = 0;
   document.querySelectorAll('.block').forEach(b => {
     let vis = 0;
     b.querySelectorAll('.song').forEach(s => { const ok = !q || s.dataset.s.includes(q); s.style.display = ok ? '' : 'none'; if(ok) vis++; });
@@ -185,10 +216,19 @@ $('q').addEventListener('input', e => {
   });
   $('none').style.display = shown ? 'none' : 'block';
 });
+
+$('copyAcc') && ($('copyAcc').onclick = async (e) => {
+  const b = e.currentTarget, txt = '8990693139';
+  try { await navigator.clipboard.writeText(txt); }
+  catch(_) { const t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); try{document.execCommand('copy')}catch(__){} t.remove(); }
+  b.textContent = 'Скопировано ✓'; setTimeout(() => b.textContent = 'Скопировать номер', 2000);
+});
+window.addEventListener('scroll', () => $('up').classList.toggle('show', scrollY > 600), {passive:true});
+$('up').onclick = () => scrollTo({top:0, behavior:'smooth'});
 $('all').onclick = () => songs.forEach(s => s.open = true);
 $('fold').onclick = () => songs.forEach(s => s.open = false);
 
-let fs = +(store.get('fs') || 17);
+let fs = +(store.get('fs') || 18);
 const setFs = v => { fs = Math.max(13, Math.min(30, v)); document.documentElement.style.setProperty('--fs', fs+'px'); store.set('fs', fs); };
 setFs(fs);
 $('minus').onclick = () => setFs(fs - 2);
